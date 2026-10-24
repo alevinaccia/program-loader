@@ -1,0 +1,212 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD build/programs/runtime/crt0.o
+LOAD build/programs/runtime/syscalls.o
+LOAD build/programs/runtime/printf.o
+LOAD build/programs/runtime/format.o
+LOAD build/programs/hello.o
+LOAD /Applications/ArmGNUToolchain/15.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.3.1/thumb/v7-m/nofp/libgcc.a
+                0x00000c00                        PROGRAM_MAX_SIZE = 0xc00
+                0x00000280                        PROGRAM_CODE_OFFSET = 0x280
+                0x00000200                        WX_ALIGN = 0x200
+                0x00000000                        . = 0x0
+
+.text           0x00000000      0x2cc
+ *(.text.start)
+ .text.start    0x00000000        0x8 build/programs/runtime/crt0.o
+                0x00000000                _start
+ */runtime/*.o(.text .text.*)
+ .text          0x00000008        0x0 build/programs/runtime/crt0.o
+ .text          0x00000008       0x3e build/programs/runtime/syscalls.o
+                0x00000008                sys_write
+                0x0000000c                sys_read
+                0x00000010                sys_uptime
+                0x00000014                sys_exit
+                0x0000001a                task_yield
+                0x0000001e                task_delay
+                0x00000022                task_delay_until
+                0x00000026                trace_dump
+                0x0000002a                task_tick_count
+                0x0000002e                sys_image_count
+                0x00000032                sys_image_name
+                0x00000036                sys_program_run
+                0x0000003a                sys_program_wait
+                0x0000003e                task_exit
+ *fill*         0x00000046        0x2 
+ .text          0x00000048       0xa4 build/programs/runtime/printf.o
+                0x00000048                write_all
+                0x00000088                printf
+                0x000000bc                sleep_ms
+                0x000000d6                spin_ticks
+ .text          0x000000ec      0x128 build/programs/runtime/format.o
+                0x0000014e                utoa_dec
+                0x00000154                utoa_hex
+                0x0000015a                vformat
+                0x00000214                        _runtime_end = .
+                0x00000280                        . = PROGRAM_CODE_OFFSET
+ *fill*         0x00000214       0x6c 
+                0x00000280                        _code_start = .
+ *(.text .text.*)
+ .text          0x00000280        0x0 build/programs/hello.o
+ .text.startup  0x00000280       0x28 build/programs/hello.o
+                0x00000280                main
+ *(.rodata .rodata.*)
+ .rodata.str1.1
+                0x000002a8       0x21 build/programs/runtime/format.o
+                                  0x7 (size before relaxing)
+ .rodata.str1.1
+                0x000002c9        0x0 build/programs/hello.o
+                                 0x1a (size before relaxing)
+                0x000002cc                        . = ALIGN (0x4)
+ *fill*         0x000002c9        0x3 
+                0x000002cc                        _code_end = .
+
+.glue_7         0x000002cc        0x0
+ .glue_7        0x000002cc        0x0 linker stubs
+
+.glue_7t        0x000002cc        0x0
+ .glue_7t       0x000002cc        0x0 linker stubs
+
+.vfp11_veneer   0x000002cc        0x0
+ .vfp11_veneer  0x000002cc        0x0 linker stubs
+
+.v4_bx          0x000002cc        0x0
+ .v4_bx         0x000002cc        0x0 linker stubs
+
+.iplt           0x000002cc        0x0
+ .iplt          0x000002cc        0x0 build/programs/runtime/crt0.o
+
+.rel.dyn        0x000002cc        0x0
+ .rel.iplt      0x000002cc        0x0 build/programs/runtime/crt0.o
+                0x00000400                        . = ALIGN (WX_ALIGN)
+
+.data           0x00000400        0x4
+                0x00000400                        _data_start = .
+ *(.data .data.*)
+ .data          0x00000400        0x0 build/programs/runtime/crt0.o
+ .data          0x00000400        0x0 build/programs/runtime/syscalls.o
+ .data          0x00000400        0x0 build/programs/runtime/printf.o
+ .data          0x00000400        0x0 build/programs/runtime/format.o
+ .data          0x00000400        0x4 build/programs/hello.o
+                0x00000400                start_value
+                0x00000404                        . = ALIGN (0x4)
+                0x00000404                        _data_end = .
+
+.igot.plt       0x00000404        0x0
+ .igot.plt      0x00000404        0x0 build/programs/runtime/crt0.o
+
+.bss            0x00000404        0x4
+ *(.bss .bss.* COMMON)
+ .bss           0x00000404        0x0 build/programs/runtime/crt0.o
+ .bss           0x00000404        0x0 build/programs/runtime/syscalls.o
+ .bss           0x00000404        0x0 build/programs/runtime/printf.o
+ .bss           0x00000404        0x0 build/programs/runtime/format.o
+ .bss           0x00000404        0x4 build/programs/hello.o
+                0x00000408                        . = ALIGN (0x4)
+                0x00000408                        _program_end = .
+                0x00000001                        ASSERT ((_runtime_end <= _code_start), runtime does not fit below code offset)
+                0x00000001                        ASSERT ((_program_end < PROGRAM_MAX_SIZE), Program is larger than 4kb)
+OUTPUT(build/programs/hello.elf elf32-littlearm)
+LOAD linker stubs
+
+.ARM.attributes
+                0x00000000       0x2f
+ .ARM.attributes
+                0x00000000       0x21 build/programs/runtime/crt0.o
+ .ARM.attributes
+                0x00000021       0x21 build/programs/runtime/syscalls.o
+ .ARM.attributes
+                0x00000042       0x2d build/programs/runtime/printf.o
+ .ARM.attributes
+                0x0000006f       0x2d build/programs/runtime/format.o
+ .ARM.attributes
+                0x0000009c       0x2d build/programs/hello.o
+
+.comment        0x00000000       0x46
+ .comment       0x00000000       0x46 build/programs/runtime/printf.o
+                                 0x47 (size before relaxing)
+ .comment       0x00000046        0x0 build/programs/runtime/format.o
+                                 0x47 (size before relaxing)
+ .comment       0x00000046        0x0 build/programs/hello.o
+                                 0x47 (size before relaxing)
+
+.debug_line     0x00000000      0x59c
+ .debug_line    0x00000000       0x4a build/programs/runtime/crt0.o
+ .debug_line    0x0000004a       0x76 build/programs/runtime/syscalls.o
+ .debug_line    0x000000c0      0x1fa build/programs/runtime/printf.o
+ .debug_line    0x000002ba      0x277 build/programs/runtime/format.o
+ .debug_line    0x00000531       0x6b build/programs/hello.o
+
+.debug_line_str
+                0x00000000       0x5e
+ .debug_line_str
+                0x00000000       0x5e build/programs/runtime/crt0.o
+                                 0x4f (size before relaxing)
+ .debug_line_str
+                0x0000005e        0x0 build/programs/runtime/syscalls.o
+                                 0x4e (size before relaxing)
+
+.debug_info     0x00000000      0x961
+ .debug_info    0x00000000       0x31 build/programs/runtime/crt0.o
+ .debug_info    0x00000031       0xce build/programs/runtime/syscalls.o
+ .debug_info    0x000000ff      0x39a build/programs/runtime/printf.o
+ .debug_info    0x00000499      0x3df build/programs/runtime/format.o
+ .debug_info    0x00000878       0xe9 build/programs/hello.o
+
+.debug_abbrev   0x00000000      0x53f
+ .debug_abbrev  0x00000000       0x28 build/programs/runtime/crt0.o
+ .debug_abbrev  0x00000028       0x28 build/programs/runtime/syscalls.o
+ .debug_abbrev  0x00000050      0x267 build/programs/runtime/printf.o
+ .debug_abbrev  0x000002b7      0x1d4 build/programs/runtime/format.o
+ .debug_abbrev  0x0000048b       0xb4 build/programs/hello.o
+
+.debug_aranges  0x00000000       0xa0
+ .debug_aranges
+                0x00000000       0x20 build/programs/runtime/crt0.o
+ .debug_aranges
+                0x00000020       0x20 build/programs/runtime/syscalls.o
+ .debug_aranges
+                0x00000040       0x20 build/programs/runtime/printf.o
+ .debug_aranges
+                0x00000060       0x20 build/programs/runtime/format.o
+ .debug_aranges
+                0x00000080       0x20 build/programs/hello.o
+
+.debug_str      0x00000000      0x2d2
+ .debug_str     0x00000000      0x2d2 build/programs/runtime/crt0.o
+                                 0x64 (size before relaxing)
+ .debug_str     0x000002d2        0x0 build/programs/runtime/syscalls.o
+                                0x10f (size before relaxing)
+ .debug_str     0x000002d2        0x0 build/programs/runtime/printf.o
+                                0x201 (size before relaxing)
+ .debug_str     0x000002d2        0x0 build/programs/runtime/format.o
+                                0x1bc (size before relaxing)
+ .debug_str     0x000002d2        0x0 build/programs/hello.o
+                                0x175 (size before relaxing)
+
+.debug_loclists
+                0x00000000      0x320
+ .debug_loclists
+                0x00000000       0xc7 build/programs/runtime/printf.o
+ .debug_loclists
+                0x000000c7      0x259 build/programs/runtime/format.o
+
+.debug_frame    0x00000000      0x180
+ .debug_frame   0x00000000       0xb0 build/programs/runtime/printf.o
+ .debug_frame   0x000000b0       0xa8 build/programs/runtime/format.o
+ .debug_frame   0x00000158       0x28 build/programs/hello.o
+
+.debug_rnglists
+                0x00000000       0x29
+ .debug_rnglists
+                0x00000000       0x16 build/programs/runtime/format.o
+ .debug_rnglists
+                0x00000016       0x13 build/programs/hello.o
