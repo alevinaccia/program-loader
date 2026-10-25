@@ -15,6 +15,7 @@ LOAD build/programs/runtime/format.o
 LOAD build/programs/hello.o
 LOAD /Applications/ArmGNUToolchain/15.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.3.1/thumb/v7-m/nofp/libgcc.a
                 0x00000c00                        PROGRAM_MAX_SIZE = 0xc00
+                0x00000400                        STACK_SIZE = 0x400
                 0x00000280                        PROGRAM_CODE_OFFSET = 0x280
                 0x00000200                        WX_ALIGN = 0x200
                 0x00000000                        . = 0x0
@@ -112,8 +113,14 @@ LOAD /Applications/ArmGNUToolchain/15.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  .bss           0x00000404        0x4 build/programs/hello.o
                 0x00000408                        . = ALIGN (0x4)
                 0x00000408                        _program_end = .
+
+.stack          0x00000408      0xc00
+                0x00000c00                        . = PROGRAM_MAX_SIZE
+ *fill*         0x00000408      0xc00 
+                0x00001408                        _estack = (. + STACK_SIZE)
                 0x00000001                        ASSERT ((_runtime_end <= _code_start), runtime does not fit below code offset)
-                0x00000001                        ASSERT ((_program_end < PROGRAM_MAX_SIZE), Program is larger than 4kb)
+                0x00000001                        ASSERT ((_program_end <= PROGRAM_MAX_SIZE), Program is larger than 4kb)
+                0x00000001                        ASSERT ((_program_end <= (_estack - STACK_SIZE)), Stack is overflowing)
 OUTPUT(build/programs/hello.elf elf32-littlearm)
 LOAD linker stubs
 
