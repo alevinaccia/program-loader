@@ -11,6 +11,7 @@
 #define TASKS_H
 
 /* The idle task: sleeps (`wfi`) for ever. Never returns. */
-void idle_task( void );
+void idle_task(void);
+void shell_task(void);
 
 #endif /* TASKS_H */

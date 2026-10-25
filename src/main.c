@@ -33,10 +33,9 @@ int main(void) {
   /* 4. Set up the MPU: region 0 = FLASH, then switch it on. */
   mpu_init();
 
-  char name[IMAGE_NAME_SIZE];
-  sys_image_name((unsigned)0, name, IMAGE_NAME_SIZE);
+  int c = sys_image_count();
 
-  kprintf("loader: loaded %s images \n", name);
+  kprintf("loader: loaded %d images \n", c);
 
   /* 5. Start the tasks. Only an exception return can enter a task
    * (it is the only way to switch to the process stack and drop

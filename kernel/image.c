@@ -32,9 +32,6 @@ static void image_check(void) {
   }
 
   // Check that every entry is over 40bytes
-  uint32_t dir_size = h->count * IMAGE_ENTRY_SIZE;
-  uint32_t contents_start = h->directory_offset + dir_size;
-
   for (unsigned i = 0; i < h->count; i++) {
     const struct img1_entry *e = entry(i);
     if (e->size < IMAGE_FILE_MIN_SIZE) {
